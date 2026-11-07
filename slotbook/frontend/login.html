@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login or register for SlotBook — Campus Resource Booking System.">
+    <title>SlotBook — Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">📅</span>
+                <span class="logo-text">Slot<span class="logo-accent">Book</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" id="nav-home">Resources</a>
+                <a href="my-bookings.html" class="nav-link" id="nav-bookings">My Bookings</a>
+                <a href="admin.html" class="nav-link" id="nav-admin">Admin</a>
+            </div>
+            <div class="nav-user" id="nav-user">
+                <a href="login.html" class="btn btn-outline btn-sm active" id="nav-login-btn">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Section -->
+    <section class="auth-section" id="auth-section">
+        <div class="auth-card glass-card">
+            <div class="auth-header">
+                <h1 id="auth-title">Welcome Back</h1>
+                <p id="auth-subtitle">Sign in to book campus resources</p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form" id="login-form">
+                <div class="form-group">
+                    <label for="login-email" class="form-label">Email</label>
+                    <input type="email" id="login-email" class="form-input" placeholder="you@campus.edu" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password" class="form-label">Password</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="login-submit-btn">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader hidden"></span>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form hidden" id="register-form">
+                <div class="form-group">
+                    <label for="register-name" class="form-label">Full Name</label>
+                    <input type="text" id="register-name" class="form-input" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email" class="form-label">Email</label>
+                    <input type="email" id="register-email" class="form-input" placeholder="you@campus.edu" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password" class="form-label">Password</label>
+                    <input type="password" id="register-password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-role" class="form-label">Role</label>
+                    <select id="register-role" class="form-input">
+                        <option value="STUDENT">Student</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="register-submit-btn">
+                    <span class="btn-text">Create Account</span>
+                    <span class="btn-loader hidden"></span>
+                </button>
+            </form>
+
+            <div class="auth-error hidden" id="auth-error"></div>
+
+            <div class="auth-toggle">
+                <span id="toggle-text">Don't have an account?</span>
+                <button class="btn-link" id="auth-toggle-btn">Register</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Auth page logic
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const toggleBtn = document.getElementById('auth-toggle-btn');
+        const toggleText = document.getElementById('toggle-text');
+        const authTitle = document.getElementById('auth-title');
+        const authSubtitle = document.getElementById('auth-subtitle');
+        const authError = document.getElementById('auth-error');
+        let isLogin = true;
+
+        // If already logged in, redirect
+        if (localStorage.getItem('userId')) {
+            window.location.href = 'index.html';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            isLogin = !isLogin;
+            loginForm.classList.toggle('hidden');
+            registerForm.classList.toggle('hidden');
+            authError.classList.add('hidden');
+
+            if (isLogin) {
+                authTitle.textContent = 'Welcome Back';
+                authSubtitle.textContent = 'Sign in to book campus resources';
+                toggleText.textContent = "Don't have an account?";
+                toggleBtn.textContent = 'Register';
+            } else {
+                authTitle.textContent = 'Create Account';
+                authSubtitle.textContent = 'Join SlotBook to start booking';
+                toggleText.textContent = 'Already have an account?';
+                toggleBtn.textContent = 'Sign In';
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authError.classList.add('hidden');
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const user = await loginUser(email, password);
+                localStorage.setItem('userId', user.userId);
+                localStorage.setItem('userName', user.name);
+                localStorage.setItem('userRole', user.role);
+                window.location.href = 'index.html';
+            } catch (err) {
+                authError.textContent = err.message;
+                authError.classList.remove('hidden');
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authError.classList.add('hidden');
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const role = document.getElementById('register-role').value;
+
+            try {
+                const user = await registerUser({ name, email, password, role });
+                localStorage.setItem('userId', user.userId);
+                localStorage.setItem('userName', user.name);
+                localStorage.setItem('userRole', user.role);
+                window.location.href = 'index.html';
+            } catch (err) {
+                authError.textContent = err.message;
+                authError.classList.remove('hidden');
+            }
+        });
+
+        // Update nav for logged in state
+        updateNavAuth();
+    </script>
+</body>
+</html>

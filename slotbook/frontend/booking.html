@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Book a time slot for a campus resource on SlotBook.">
+    <title>SlotBook — Book a Slot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">📅</span>
+                <span class="logo-text">Slot<span class="logo-accent">Book</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" id="nav-home">Resources</a>
+                <a href="my-bookings.html" class="nav-link" id="nav-bookings">My Bookings</a>
+                <a href="admin.html" class="nav-link" id="nav-admin">Admin</a>
+            </div>
+            <div class="nav-user" id="nav-user">
+                <a href="login.html" class="btn btn-outline btn-sm" id="nav-login-btn">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Booking Section -->
+    <section class="booking-section" id="booking-section">
+        <div class="container">
+            <!-- Resource Info Header -->
+            <div class="booking-header glass-card" id="booking-header">
+                <div class="booking-resource-info">
+                    <span class="category-badge" id="resource-category">HALL</span>
+                    <h1 id="resource-name">Loading...</h1>
+                    <p class="resource-location" id="resource-location"></p>
+                    <p class="resource-capacity" id="resource-capacity"></p>
+                </div>
+                <div class="booking-date-picker">
+                    <label for="booking-date" class="form-label">Select Date</label>
+                    <input type="date" id="booking-date" class="form-input">
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="timeline-container glass-card" id="timeline-container">
+                <h2 class="timeline-title">Available Slots</h2>
+                <p class="timeline-hint">Click on a free slot to select it, then confirm your booking.</p>
+                <div class="timeline" id="timeline">
+                    <!-- Slots rendered by booking.js -->
+                </div>
+            </div>
+
+            <!-- Booking Confirmation -->
+            <div class="booking-confirm glass-card hidden" id="booking-confirm">
+                <h3>Confirm Your Booking</h3>
+                <div class="confirm-details">
+                    <div class="confirm-item">
+                        <span class="confirm-label">Resource</span>
+                        <span class="confirm-value" id="confirm-resource"></span>
+                    </div>
+                    <div class="confirm-item">
+                        <span class="confirm-label">Date</span>
+                        <span class="confirm-value" id="confirm-date"></span>
+                    </div>
+                    <div class="confirm-item">
+                        <span class="confirm-label">Time</span>
+                        <span class="confirm-value" id="confirm-time"></span>
+                    </div>
+                </div>
+                <div class="confirm-actions">
+                    <button class="btn btn-primary" id="confirm-booking-btn">
+                        <span class="btn-text">Confirm Booking</span>
+                        <span class="btn-loader hidden"></span>
+                    </button>
+                    <button class="btn btn-outline" id="cancel-selection-btn">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-spinner hidden" id="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading availability...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/booking.js"></script>
+</body>
+</html>

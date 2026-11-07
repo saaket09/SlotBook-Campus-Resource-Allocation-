@@ -1,0 +1,41 @@
+# ========================
+# Java / Maven
+# ========================
+slotbook/backend/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# ========================
+# Node.js
+# ========================
+node_modules/
+package-lock.json
+
+# ========================
+# OS generated files
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# Agent / Tool metadata
+# ========================
+.agents/
+.github/modernize/
+

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View and manage your campus resource bookings on SlotBook.">
+    <title>SlotBook — My Bookings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">📅</span>
+                <span class="logo-text">Slot<span class="logo-accent">Book</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" id="nav-home">Resources</a>
+                <a href="my-bookings.html" class="nav-link active" id="nav-bookings">My Bookings</a>
+                <a href="admin.html" class="nav-link" id="nav-admin">Admin</a>
+            </div>
+            <div class="nav-user" id="nav-user">
+                <a href="login.html" class="btn btn-outline btn-sm" id="nav-login-btn">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- My Bookings Section -->
+    <section class="mybookings-section" id="mybookings-section">
+        <div class="container">
+            <div class="section-header">
+                <h1>My Bookings</h1>
+                <p class="section-subtitle">View and manage your resource reservations</p>
+            </div>
+
+            <!-- Bookings Table -->
+            <div class="bookings-table-wrapper glass-card" id="bookings-table-wrapper">
+                <table class="bookings-table" id="bookings-table">
+                    <thead>
+                        <tr>
+                            <th>Resource</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookings-tbody">
+                        <!-- Rows populated by mybookings.js -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="empty-state">
+                <div class="empty-icon">📋</div>
+                <h3>No bookings yet</h3>
+                <p>Browse resources and book your first slot!</p>
+                <a href="index.html" class="btn btn-primary">Browse Resources</a>
+            </div>
+
+            <!-- Login Required -->
+            <div class="empty-state hidden" id="login-required">
+                <div class="empty-icon">🔒</div>
+                <h3>Login Required</h3>
+                <p>Please sign in to view your bookings.</p>
+                <a href="login.html" class="btn btn-primary">Sign In</a>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-spinner" id="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading bookings...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/mybookings.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin panel — Add and manage campus resources on SlotBook.">
+    <title>SlotBook — Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">📅</span>
+                <span class="logo-text">Slot<span class="logo-accent">Book</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" id="nav-home">Resources</a>
+                <a href="my-bookings.html" class="nav-link" id="nav-bookings">My Bookings</a>
+                <a href="admin.html" class="nav-link active" id="nav-admin">Admin</a>
+            </div>
+            <div class="nav-user" id="nav-user">
+                <a href="login.html" class="btn btn-outline btn-sm" id="nav-login-btn">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Section -->
+    <section class="admin-section" id="admin-section">
+        <div class="container">
+            <div class="section-header">
+                <h1>Admin Panel</h1>
+                <p class="section-subtitle">Add and manage campus resources</p>
+            </div>
+
+            <div class="admin-grid">
+                <!-- Add Resource Form -->
+                <div class="admin-form-card glass-card" id="add-resource-card">
+                    <h2>Add New Resource</h2>
+                    <form class="admin-form" id="add-resource-form">
+                        <div class="form-group">
+                            <label for="resource-name-input" class="form-label">Resource Name</label>
+                            <input type="text" id="resource-name-input" class="form-input" placeholder="e.g. Seminar Hall B" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resource-category-input" class="form-label">Category</label>
+                            <select id="resource-category-input" class="form-input" required>
+                                <option value="HALL">Hall</option>
+                                <option value="SPORTS">Sports</option>
+                                <option value="LAB">Lab</option>
+                                <option value="EQUIPMENT">Equipment</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resource-location-input" class="form-label">Location</label>
+                            <input type="text" id="resource-location-input" class="form-input" placeholder="e.g. Main Block, Floor 3" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resource-capacity-input" class="form-label">Capacity</label>
+                            <input type="number" id="resource-capacity-input" class="form-input" placeholder="e.g. 100" min="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full" id="add-resource-btn">
+                            <span class="btn-text">Add Resource</span>
+                            <span class="btn-loader hidden"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Existing Resources List -->
+                <div class="admin-list-card glass-card" id="resources-list-card">
+                    <h2>Existing Resources</h2>
+                    <div class="admin-resources-list" id="admin-resources-list">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div class="loading-spinner hidden" id="admin-loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Admin page logic
+        const addForm = document.getElementById('add-resource-form');
+        const resourcesList = document.getElementById('admin-resources-list');
+        const adminLoading = document.getElementById('admin-loading');
+
+        // Load existing resources
+        async function loadResources() {
+            adminLoading.classList.remove('hidden');
+            try {
+                const resources = await getResources();
+                renderResourcesList(resources);
+            } catch (err) {
+                showToast('Failed to load resources: ' + err.message, 'error');
+            } finally {
+                adminLoading.classList.add('hidden');
+            }
+        }
+
+        function renderResourcesList(resources) {
+            if (resources.length === 0) {
+                resourcesList.innerHTML = '<p class="empty-text">No resources added yet.</p>';
+                return;
+            }
+            resourcesList.innerHTML = resources.map(r => `
+                <div class="admin-resource-item">
+                    <div class="admin-resource-info">
+                        <span class="category-badge category-${r.category.toLowerCase()}">${r.category}</span>
+                        <strong>${r.name}</strong>
+                        <span class="admin-resource-meta">📍 ${r.location} · 👥 ${r.capacity}</span>
+                    </div>
+                    <span class="status-badge ${r.isActive ? 'status-confirmed' : 'status-cancelled'}">
+                        ${r.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        // Add resource
+        addForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resource = {
+                name: document.getElementById('resource-name-input').value,
+                category: document.getElementById('resource-category-input').value,
+                location: document.getElementById('resource-location-input').value,
+                capacity: parseInt(document.getElementById('resource-capacity-input').value)
+            };
+
+            try {
+                await addResource(resource);
+                showToast('Resource added successfully!', 'success');
+                addForm.reset();
+                loadResources();
+            } catch (err) {
+                showToast('Failed to add resource: ' + err.message, 'error');
+            }
+        });
+
+        // Init
+        updateNavAuth();
+        loadResources();
+    </script>
+</body>
+</html>
