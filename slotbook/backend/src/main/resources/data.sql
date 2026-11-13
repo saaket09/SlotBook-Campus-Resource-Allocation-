@@ -64,3 +64,7 @@ VALUES (11, 'Portable PA System', 'EQUIPMENT', 'AV Room, Main Block', 1, TRUE);
 MERGE INTO resources (resource_id, name, category, location, capacity, is_active)
 KEY (resource_id)
 VALUES (12, 'Video Camera Set', 'EQUIPMENT', 'Media Lab, Tech Block', 1, TRUE);
+
+-- ── Reset auto-increment counters past seeded IDs ───────────────────────────
+ALTER TABLE users ALTER COLUMN user_id RESTART WITH 100;
+ALTER TABLE resources ALTER COLUMN resource_id RESTART WITH 100;
