@@ -3,27 +3,33 @@
  * Central place for all backend API calls.
  */
 
-const BASE_URL = "http://localhost:8080/api";
+// ─── Microservices Endpoints ────────────────────────────────
+// User Service     : Port 8081
+// Resource Service : Port 8082
+// Booking Service  : Port 8083
+const USER_API     = "http://localhost:8081/api/users";
+const RESOURCE_API = "http://localhost:8082/api/resources";
+const BOOKING_API  = "http://localhost:8083/api/bookings";
 
-// ─── Resources ──────────────────────────────────────────────
+// ─── Resources (Port 8082) ──────────────────────────────────
 
 async function getResources(category = "") {
     const url = category
-        ? `${BASE_URL}/resources?category=${encodeURIComponent(category)}`
-        : `${BASE_URL}/resources`;
+        ? `${RESOURCE_API}?category=${encodeURIComponent(category)}`
+        : `${RESOURCE_API}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error("Failed to fetch resources");
     return res.json();
 }
 
 async function getAvailability(resourceId, date) {
-    const res = await fetch(`${BASE_URL}/resources/${resourceId}/availability?date=${date}`);
+    const res = await fetch(`${RESOURCE_API}/${resourceId}/availability?date=${date}`);
     if (!res.ok) throw new Error("Failed to fetch availability");
     return res.json();
 }
 
 async function addResource(resourceData) {
-    const res = await fetch(`${BASE_URL}/resources`, {
+    const res = await fetch(`${RESOURCE_API}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(resourceData)
@@ -35,10 +41,10 @@ async function addResource(resourceData) {
     return res.json();
 }
 
-// ─── Bookings ───────────────────────────────────────────────
+// ─── Bookings (Port 8083) ───────────────────────────────────
 
 async function createBooking(bookingData) {
-    const res = await fetch(`${BASE_URL}/bookings`, {
+    const res = await fetch(`${BOOKING_API}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bookingData)
@@ -51,13 +57,13 @@ async function createBooking(bookingData) {
 }
 
 async function getUserBookings(userId) {
-    const res = await fetch(`${BASE_URL}/bookings/user/${userId}`);
+    const res = await fetch(`${BOOKING_API}/user/${userId}`);
     if (!res.ok) throw new Error("Failed to fetch bookings");
     return res.json();
 }
 
 async function cancelBooking(bookingId) {
-    const res = await fetch(`${BASE_URL}/bookings/${bookingId}`, {
+    const res = await fetch(`${BOOKING_API}/${bookingId}`, {
         method: "DELETE"
     });
     if (!res.ok) {
@@ -67,10 +73,10 @@ async function cancelBooking(bookingId) {
     return res.json();
 }
 
-// ─── Users ──────────────────────────────────────────────────
+// ─── Users (Port 8081) ──────────────────────────────────────
 
 async function registerUser(userData) {
-    const res = await fetch(`${BASE_URL}/users/register`, {
+    const res = await fetch(`${USER_API}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData)
@@ -83,7 +89,7 @@ async function registerUser(userData) {
 }
 
 async function loginUser(email, password) {
-    const res = await fetch(`${BASE_URL}/users/login`, {
+    const res = await fetch(`${USER_API}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })

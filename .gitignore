@@ -1,7 +1,10 @@
 # ========================
 # Java / Maven
 # ========================
+target/
+**/target/
 slotbook/backend/target/
+slotbook/microservices/**/target/
 *.class
 *.jar
 *.war
